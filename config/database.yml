@@ -1,0 +1,14 @@
+# default: &default
+#   adapter: postgresql
+#   pool: 5
+#   timeout: 5000
+#
+# development:
+#   <<: *default
+#
+# test:
+#   <<: *default
+#
+# production:
+#   <<: *default
+# BB 11/12/2017- Since we will be pulling from the github api directly we dont need a database for this application.
