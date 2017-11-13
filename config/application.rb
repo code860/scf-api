@@ -4,10 +4,10 @@ require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
 require "active_job/railtie"
-# require "active_record/railtie" -- this is not requred for this project since we will be pulling directly fro the github api
+require "active_record/railtie" 
 require "action_controller/railtie"
 require "action_mailer/railtie"
-# require "action_view/railtie"
+require "action_view/railtie"
 require "action_cable/engine"
 # require "sprockets/railtie"
 require "rails/test_unit/railtie"
