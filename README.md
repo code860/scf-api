@@ -1,5 +1,5 @@
 
- *Client Side Project In Ember.js Can be found <a href='https://github.com/code860/scf-client'> here </a>
+* Client Side Project In Ember.js Can be found <a href='https://github.com/code860/scf-client'> here </a>
 
 * Rails Version 5.0.1
 
