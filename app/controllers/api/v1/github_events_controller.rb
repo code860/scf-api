@@ -8,7 +8,7 @@ class API::V1::GithubEventsController < API::V1::APIController
 
   private
   def check_query_params
-    [:username, :repo, :event_type].each do |required_param|
+    [:username, :repo].each do |required_param|
       if params[required_param].blank?
         render json: {status: 400, message: "Error missing #{required_param} parameter"}
       end

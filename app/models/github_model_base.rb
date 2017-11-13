@@ -5,8 +5,8 @@ class GithubModelBase
   include ActiveModel::Validations
   include ActiveModel::Associations
 
-  attr_accessor :id
-  attr_reader :errors, :message
+  attr_accessor :id, :errors
+
 
   def initialize(args = {})
      args.each do |name, value|

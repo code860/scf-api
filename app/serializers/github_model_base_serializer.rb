@@ -1,3 +1,3 @@
 class GithubModelBaseSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :errors
 end
