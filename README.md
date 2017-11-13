@@ -1,24 +1,12 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+ *Client Side Project In Ember.js Can be found <a href='https://github.com/code860/scf-client'> here </a>
 
-Things you may want to cover:
+* Rails Version 5.0.1
 
-* Ruby version
+* Ruby version 2.3.1
 
-* System dependencies
+* Rspec Test Suite
 
-* Configuration
+* Uses Octokit Gem To Inetract with Github API and creates ActiveModel classes without any database backing. 
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* Run <b>bundle install</b> first and <b>rspec</b> to run the tests
