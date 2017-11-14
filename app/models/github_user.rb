@@ -1,4 +1,4 @@
 class GithubUser < GithubModelBase
-  attr_accessor :login, :avatar_url, :html_url, :username
-  alias_method :login, :username
+  attr_accessor :display_login, :avatar_url
+  alias_method :username, :display_login
 end

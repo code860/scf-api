@@ -4,7 +4,9 @@ require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
 require "active_job/railtie"
-require "active_record/railtie" 
+if Rails.env.test?
+  require "active_record/railtie"
+end
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
