@@ -7,6 +7,13 @@
 
 * Rspec Test Suite
 
-* Uses Octokit Gem To Inetract with Github API and creates ActiveModel classes without any database backing. 
+* Uses Octokit Gem To Interact with Github API and creates ActiveModel classes without any database backing. 
 
-* Run <b>bundle install</b> first and <b>rspec</b> to run the tests
+* Usage: 
+     * 1 Run <b>bundle install</b>
+     * 2 create a .env file at the root of the cloned directory
+     * 3 Create a personal access token in your github account's developer settings 
+     * 4 Add token to .env file like GITHUB_ACCESS_TOKEN=YOUR_TOKEN
+     * 5 run <b>rspec</b> in your terminal to run the tests
+
+
