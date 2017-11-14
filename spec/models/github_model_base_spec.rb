@@ -27,22 +27,17 @@ RSpec.describe GithubModelBase, type: :model do
           gmb2.errors.messages[:base].include?("#{gmb2.class}'s id must be a String, Fixnum got #{gmb2.id.class} instead!")
         ).to be(true)
     end
-    it "should not be valid if it has an adapter_error" do
-      adapter_message = "I broke in the GithubAdapter!"
-      gmb = GithubModelBase.new(adapter_error: adapter_message)
-      expect(gmb.valid?).to be(false)
-      expect(
-          gmb.errors.messages[:base].include?("GithubAdapter Returned the following message: #{adapter_message} with the following status: ")
-        ).to be(true)
-    end
   end
   context "With Class Methods" do
     it "Gets an error when querying itself" do
       results = GithubModelBase.query
-      expect(results).not_to be_empty
-      gmb = results.first
-      expect(gmb.adapter_error).not_to be(nil)
-      expect(gmb.status).to be(400)
+      expect(results).to have_key(:meta)
+      expect(results).to have_key(:objects)
+      expect(results).to have_key(:status)
+      expect(results[:meta]).to have_key(:error_msg)
+      expect(results[:objects]).to be_empty
+      expect(results[:meta][:error_msg]).not_to be(nil)
+      expect(results[:status]).to be(400)
     end
   end
 end

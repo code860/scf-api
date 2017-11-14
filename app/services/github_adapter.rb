@@ -1,7 +1,8 @@
 require 'octokit'
-#BB 11/12/2017 - This is where we will the octokit gem to make the calls to the github api. Using the Client ID and Client Secret in the ENV file we will establish a connection and perform the required requests.  We will utilize this service in our models so they can be serizalized and consumed via the ember project.
+#BB 11/12/2017 - This is where we will the octokit gem to make the calls to the github api. Using the GITHUB_ACCESS_TOKEN in the ENV file we will establish a connection and perform the required requests.  We will utilize this service in our models so they can be serizalized and consumed via the ember project.
 
 class GithubAdapter
+  #Added a whitelisting system to only allow certain models to use the query and the find methods
   FIND_CLASS_WHITELIST = %w(GithubUser GithubRepo GithubEvent)
   QUERY_CLASS_WHITELIST = %w(GithubEvent)
   class << self
@@ -9,7 +10,7 @@ class GithubAdapter
     def authenticated?
       github_client.token_authenticated?
     end
-    #Public Hooks for the models
+    #Public Hooks for the  parent GITHUB model
     def find(id, type =  nil)
       result = {json_result: nil}
       begin
@@ -26,8 +27,8 @@ class GithubAdapter
       return result
     end
 
-    def query(type= nil, query_params = {}, options = {})
-      result = {json_results: []}
+    def query(type= nil, query_params = {}, query_options = {})
+      result = {json_results: [], status: 200}
       begin
         check_client_authentication# These need to be more DRY
         ensure_type(type, QUERY_CLASS_WHITELIST)
@@ -35,8 +36,21 @@ class GithubAdapter
           when "GithubEvent"
             result[:json_results] = github_client.repository_events("#{query_params[:username]}/#{query_params[:repo]}")
         end
+      rescue Octokit::NotFound => e
+        Rails.logger.info "====================="
+        Rails.logger.info e.to_s
+        Rails.logger.info "====================="
+        result.merge!({adapter_error: "No results found", status: 404})
+      rescue Octokit::Forbidden => e
+        Rails.logger.info "====================="
+        Rails.logger.info e.to_s
+        Rails.logger.info "====================="
+        result.merge!({
+            adapter_error: "You are not allowed to view this repositories events please try another one",
+            status: 403
+          })
       rescue GithubAdapterError => e
-        result[:json_results] << e.return_hash
+        result.merge!(e.return_hash)
       end
       return result
     end

@@ -32,14 +32,12 @@ RSpec.describe GithubAdapter do
     end
     describe "with any other class" do
       it "should raise an error" do
-        t = "FooBar"
-        results = GithubAdapter.query(t)
-        expect(results[:json_results]).not_to be_empty
-        result = results[:json_results].first 
-        expect(result).to have_key(:adapter_error)
-        expect(result).to have_key(:status)
-        expect(result[:status]).to be(400)
-        expect(result[:adapter_error]).to eq("#{t} is not specified included in the following whitelist: #{GithubAdapter::QUERY_CLASS_WHITELIST.join(',')}")
+        results = GithubAdapter.query("FooBar")
+        expect(results).to have_key(:adapter_error)
+        expect(results).to have_key(:status)
+        expect(results[:json_results]).to be_empty
+        expect(results[:status]).to be(400)
+        expect(results[:adapter_error]).to eq("FooBar is not specified included in the following whitelist: #{GithubAdapter::QUERY_CLASS_WHITELIST.join(',')}")
       end
     end
   end

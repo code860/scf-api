@@ -3,13 +3,12 @@ class GithubModelBase
   include ActiveModel::Model
   include ActiveModel::AttributeMethods
   include ActiveModel::Validations
-  include ActiveModel::Associations
+  # include ActiveModel::Associations this doesn't work unless you have relatioship backed by ActiveRecord
   include ActiveModel::Serialization
 
-  attr_accessor :id, :adapter_error, :status
+  attr_accessor :id, :error_msg, :status
 
   validate :valid_id
-  validate :no_adapter_errors
 
   def initialize(args = {})
      args.each do |name, value|
@@ -28,12 +27,24 @@ class GithubModelBase
     end
 
     def query(query_params = {}, options ={})
-      result = GithubAdapter.query(type, query_params, options)
-      result[:json_results].map{|json_attrs| type.constantize.new(json_attrs)}
+      parse_query_results(GithubAdapter.query(type, query_params, options))
     end
 
     def find(id)
+      #Currently not fully implemented
       GithubAdapter.find(id, type)
+    end
+
+    private
+    def parse_query_results(results)
+      parsed_results = {objects: [], meta: {}, status: 200}
+      if results[:adapter_error].present?
+        parsed_results[:meta] = {error_msg: results[:adapter_error]}
+        parsed_results[:status] = results[:status]
+      else
+        parsed_results[:objects] = results[:json_results].map{|json_attr| type.constantize.new(json_attr)}
+      end
+      parsed_results
     end
   end
 
@@ -41,14 +52,15 @@ class GithubModelBase
   #Instance Methods#
   ##################
 
-  # BB 11.12/2017 Need These getters/ setters for relationships
-  def [](attr)
-    self.send(attr)
-  end
-
-  def []=(attr, value)
-    self.send("#{attr}=", value)
-  end
+  # BB 11/12/2017 Need These getters/ setters for relationships
+  # BB 11/14/2017 Don't Need these now because of the way ActiveModel::Associations expects at least one ActiveRecord Relationship
+  # def [](attr)
+  #   self.send(attr)
+  # end
+  #
+  # def []=(attr, value)
+  #   self.send("#{attr}=", value)
+  # end
 
   protected
   #Validations
@@ -57,11 +69,5 @@ class GithubModelBase
     self.errors.add(:base,
       "#{self.class}'s id must be a String, Fixnum got #{self.id.class} instead!"
       ) unless [String, Fixnum].include? self.id.class
-  end
-
-  def no_adapter_errors
-    self.errors.add(:base,
-      "GithubAdapter Returned the following message: #{self.adapter_error} with the following status: #{self.status}"
-      ) unless self.adapter_error.blank?
   end
 end

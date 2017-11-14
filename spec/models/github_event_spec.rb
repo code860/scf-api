@@ -18,7 +18,7 @@ RSpec.describe GithubEvent, type: :model do
       expect{ge.foo}.to raise_error(NoMethodError)
     end
     it "can belong_to a GithubRepo" do
-      skip
+      skip "Relatiosnhips Dont Work between non DB backed examples for a JSONAPI formatted seriaizer"
       t = DateTime.now
       gr = GithubRepo.new(id: "4567", name: "Test")
       ge = GithubEvent.new(id: "12345", public: true, type: "SomeEventType", created_at: t)
@@ -43,14 +43,6 @@ RSpec.describe GithubEvent, type: :model do
           ).to be(true)
         expect(
             ge2.errors.messages[:base].include?("#{ge2.class}'s id must be a String, Fixnum got #{ge2.id.class} instead!")
-          ).to be(true)
-      end
-      it "should not be valid if it has an adapter_error" do
-        adapter_message = "I broke in the GithubAdapter!"
-        ge = GithubEvent.new(adapter_error: adapter_message)
-        expect(ge.valid?).to be(false)
-        expect(
-            ge.errors.messages[:base].include?("GithubAdapter Returned the following message: #{adapter_message} with the following status: ")
           ).to be(true)
       end
     end
